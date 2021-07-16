@@ -1,9 +1,0 @@
----
-- name: render Nginx config from template
-  template:
-    src: galaxy.j2
-    dest: /etc/nginx/sites-available/galaxy
-- name: render ssl redirect config
-  template:
-    src: redirect-ssl.j2
-    dest: /etc/nginx/sites-available/redirect-ssl
