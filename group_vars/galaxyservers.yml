@@ -29,6 +29,7 @@ miniconda_version: 4.7.12
 miniconda_manage_dependencies: false
 
 galaxy_config:
+  # Application config
   galaxy:
     brand: "🧬🔬🚀"
     admin_users: admin@example.org
@@ -38,8 +39,9 @@ galaxy_config:
     tool_data_path: "{{ galaxy_mutable_data_dir }}/tool-data"
     object_store_store_by: uuid
     id_secret: "{{ vault_id_secret }}"
+    job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
 
-  # uWSGI mule messaging
+  # uWSGI config (mule messaging)
   uwsgi:
     socket: 127.0.0.1:5000
     buffer-size: 16384
@@ -65,6 +67,10 @@ galaxy_config:
       - lib/galaxy/main.py
       - lib/galaxy/main.py
     farm: job-handlers:1,2
+
+galaxy_config_templates:
+  - src: templates/galaxy/config/job_conf.xml.j2
+    dest: "{{ galaxy_config.galaxy.job_config_file }}"
 
 # Systemd
 galaxy_manage_systemd: yes
