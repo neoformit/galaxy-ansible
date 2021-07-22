@@ -31,7 +31,7 @@ miniconda_manage_dependencies: false
 galaxy_config:
   # Application config
   galaxy:
-    brand: "🧬🔬🚀"
+    brand: "🚀 Dev"
     admin_users: admin@example.com
     database_connection: "postgresql:///galaxy?host=/var/run/postgresql"
     file_path: /data
@@ -80,14 +80,14 @@ galaxy_config_templates:
   - src: templates/galaxy/config/job_resource_params_conf.xml.j2
     dest: "{{ galaxy_config.galaxy.job_resource_params_file }}"
   - src: templates/galaxy/config/tool_conf_interactive.xml.j2
-    dest: "{{ galaxy_server_dir }}/config/tool_conf_interactive.xml"
+    dest: "{{ galaxy_config_dir }}/tool_conf_interactive.xml"
 
 galaxy_local_tools:
   - testing.xml
 
 galaxy_tool_config_files:
   - "{{ galaxy_server_dir }}/config/tool_conf.xml.sample"
-  - "{{ galaxy_server_dir }}/config/tool_conf_interactive.xml"
+  - "{{ galaxy_config_dir }}/tool_conf_interactive.xml"
 
 galaxy_dynamic_job_rules:
   - my_rules.py
@@ -147,7 +147,6 @@ slurm_config:
 docker_install_compose: false
 docker_users:
   - "{{ galaxy_user.name }}"
-
 gie_proxy_dir: /srv/galaxy/gie-proxy/proxy
 gie_proxy_git_version: master
 gie_proxy_setup_nodejs: nodeenv

@@ -2,13 +2,12 @@
 
     <plugins workers="4">
         <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner"/>
-        <plugin id="slurm" type="runner" load="galaxy.jobs.runners.slurm:SlurmJobRunner"/>
     </plugins>
 
-    <destinations default="local_destination">
+    <destinations default="local">
         <!-- Destinations available for job dispatch -->
 
-        <destination id="local_destination" runner="local"/>
+        <destination id="local" runner="local"/>
 
         <destination id="slurm" runner="slurm">
             <param id="singularity_enabled">true</param>
@@ -27,36 +26,17 @@
             <param id="docker_set_user"></param>
             <param id="require_container">true</param>
         </destination>
-
-        <destination id="slurm-2c" runner="slurm">
-            <param id="nativeSpecification">--nodes=1 --ntasks=1 --cpus-per-task=2</param>
-            <param id="singularity_enabled">true</param>
-            <env id="LC_ALL">C</env>
-            <env id="SINGULARITY_CACHEDIR">/tmp/singularity</env>
-            <env id="SINGULARITY_TMPDIR">/tmp</env>
-        </destination>
-
-        <destination id="dynamic_admin_only" runner="dynamic">
-            <param id="type">python</param>
-            <param id="function">admin_only</param>
-        </destination>
-
-        <destination id="dtd" runner="dynamic">
-            <param id="type">dtd</param>
-        </destination>
-
-        <destination id="dynamic_cores_time" runner="dynamic">
-            <param id="type">python</param>
-            <param id="function">dynamic_cores_time</param>
-        </destination>
     </destinations>
 
+<!--
     <resources>
         <group id="testing">cores,time</group>
     </resources>
+ -->
 
     <tools>
-        <tool id="testing" destination="dynamic_cores_time" resources="testing"/>
+        <!-- <tool id="testing" destination="dynamic_cores_time" resources="testing"/> -->
+
         <tool destination="interactive_local" id="interactive_tool_ethercalc" />
     </tools>
 
