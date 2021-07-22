@@ -2,7 +2,11 @@
 
 An Ansible playbook to init a Galaxy dev server.
 
-Refer to [Galaxy tutorial](https://training.galaxyproject.org/training-material/topics/admin/tutorials/ansible-galaxy/tutorial.html) for additional guidance.
+Refer to the [Galaxy tutorial](https://training.galaxyproject.org/training-material/topics/admin/tutorials/ansible-galaxy/tutorial.html) for additional guidance.
+
+---
+
+This playbook enables interactive tools, which require a wildcard DNS for the host machine - [more info.](https://training.galaxyproject.org/training-material/topics/admin/tutorials/interactive-tools/tutorial.html)
 
 ---
 
