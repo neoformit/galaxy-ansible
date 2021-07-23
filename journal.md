@@ -1,4 +1,4 @@
-# Debugging Galaxy ITs serving
+# Debugging Galaxy ITs server
 
 > Followed
 [tutorial](https://training.galaxyproject.org/training-material/topics/admin/tutorials/interactive-tools/tutorial.html)
@@ -8,9 +8,12 @@ explicit error, but go into infinite loading/polling.
 - [x] `galaxy-gie-proxy` service is running ok
 - [x] `journalctl` - logs show container pull and run without error
 - [x] `docker ps` - shows container running
-- [x] Added `gie_proxy_verbose: true` to Ansible conf
+- [x] Add `gie_proxy_verbose: true` to Ansible conf
+- [x] `curl` docker container to check port
+      - *Doesn't seem to work* but unsure whether it should
+- [x] Update `gie_proxy_*` variables to match [usegalaxy.eu](https://galaxy.ansible.com/usegalaxy_eu/gie_proxy) example
+- [x] Nuke `/srv/galaxy` dir and rerun playbook
 
-- [ ] `curl` docker container to check port : *doesn't seem to work*
 - [ ] Check `interactivetools_map.sqlite` for port mapping entry
 
 ---
