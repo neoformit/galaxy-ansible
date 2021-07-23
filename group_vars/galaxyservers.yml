@@ -147,11 +147,13 @@ slurm_config:
 docker_install_compose: false
 docker_users:
   - "{{ galaxy_user.name }}"
-gie_proxy_dir: /srv/galaxy/gie-proxy/proxy
+gie_proxy_dir: /srv/gie-proxy/proxy
 gie_proxy_git_version: master
 gie_proxy_setup_nodejs: nodeenv
-gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
 gie_proxy_nodejs_version: "10.13.0"
-gie_proxy_virtualenv: /srv/galaxy/gie-proxy/venv
+gie_proxy_virtualenv: /srv/gie-proxy/venv
+gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
 gie_proxy_setup_service: systemd
+gie_proxy_port: 8000
+gie_proxy_verbose: true
 gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
