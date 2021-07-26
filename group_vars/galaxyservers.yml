@@ -22,7 +22,8 @@ galaxy_manage_paths: true
 galaxy_layout: root-dir
 galaxy_root: /srv/galaxy
 galaxy_user: {name: galaxy, shell: /bin/bash}
-galaxy_commit_id: release_20.09
+galaxy_repo: "{{ galaxy_git_repo | default('https://github.com/neoformit/galaxy.git') }}"
+galaxy_commit_id: dev-isee
 galaxy_force_checkout: true
 miniconda_prefix: "{{ galaxy_tool_dependency_dir }}/_conda"
 miniconda_version: 4.7.12

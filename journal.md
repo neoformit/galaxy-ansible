@@ -14,8 +14,6 @@ explicit error, but go into infinite loading/polling.
 - [x] Update `gie_proxy_*` variables to match [usegalaxy.eu](https://galaxy.ansible.com/usegalaxy_eu/gie_proxy) example
 - [x] Nuke `/srv/galaxy` dir and rerun playbook
 
-- [ ] Check `interactivetools_map.sqlite` for port mapping entry
-
 ---
 
 ### Log output
