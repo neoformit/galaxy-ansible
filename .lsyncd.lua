@@ -6,7 +6,7 @@ USER     = "ubuntu"             -- Remote user
 SRC_DIR  = "/home/cameron/dev/galaxy/galaxy-ansible/"   -- Trailing slash syncs dir contents only
 DEST_DIR = "/home/ubuntu/ansible/galaxy-ansible"
 RSA_KEY  = "/home/cameron/.ssh/gx-dev"
-EXCLUDE  = { '.git' , 'lsyncd.lua' }
+EXCLUDE  = { '.git' , '.lsyncd.lua', 'sync' }
 
 -- Shouldn't need to touch this:
 
