@@ -27,3 +27,4 @@
     - galaxyproject.nginx
     - geerlingguy.docker
     - usegalaxy_eu.gie_proxy
+    - galaxyproject.proftpd

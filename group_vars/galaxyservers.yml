@@ -46,6 +46,10 @@ galaxy_config:
     interactivetools_enable: true
     interactivetools_map: "{{ gie_proxy_sessions_path }}"
 
+  # FTP
+  ftp_upload_dir: /data/uploads
+  ftp_upload_site: "{{ inventory_hostname }}"
+
   # uWSGI config (mule messaging)
   uwsgi:
     socket: 127.0.0.1:5000
@@ -116,8 +120,10 @@ certbot_well_known_root: /srv/nginx/_well-known_root
 certbot_agree_tos: --agree-tos
 certbot_share_key_users:
   - nginx
+  - proftp
 certbot_post_renewal: |
     systemctl restart nginx || true
+    systemctl restart proftpd || true
 certbot_domains:
   - "{{ inventory_hostname }}"
   - "*.interactivetoolentrypoint.interactivetool.{{ inventory_hostname }}"
@@ -164,3 +170,24 @@ gie_proxy_setup_service: systemd
 gie_proxy_port: 8000
 gie_proxy_verbose: true
 gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
+
+# Proftpd
+proftpd_galaxy_auth: yes
+galaxy_ftp_upload_dir: "{{ galaxy_config.ftp_upload_dir }}"
+proftpd_display_connect: |
+  {{ inventory_hostname }} FTP server
+
+  Unauthorized access is prohibited
+proftpd_create_ftp_upload_dir: yes
+proftpd_options:
+  - User: galaxy
+  - Group: galaxy
+  - Port: 21
+proftpd_sql_db: galaxy@/var/run/postgresql
+proftpd_sql_user: galaxy
+proftpd_conf_ssl_certificate: /etc/ssl/certs/cert.pem
+proftpd_conf_ssl_certificate_key: /etc/ssl/user/privkey-proftpd.pem
+proftpd_global_options:
+  - PassivePorts: 56000 56100
+proftpd_use_mod_tls_shmcache: false
+proftpd_tls_options: NoSessionReuseRequired
