@@ -1,0 +1,8 @@
+- type: webdav
+  id: cloudstor
+  label: CloudStor
+  doc: Import your files from CloudStor. Configure access in User -> Preferences -> Manage Information
+  url: "https://cloudstor.aarnet.edu.au"
+  root: "/plus/remote.php/webdav"
+  login: ${user.preferences['owncloud_account|username']}
+  password: ${user.preferences['owncloud_account|password']}
