@@ -51,6 +51,7 @@ galaxy_config:
     interactivetools_map: "{{ gie_proxy_sessions_path }}"
 
   # FTP
+  file_sources_configured: true
   ftp_upload_dir: /data/uploads
   ftp_upload_site: "{{ inventory_hostname }}"
 
@@ -97,21 +98,18 @@ galaxy_config_templates:
     dest: "{{ galaxy_config_dir }}/local_tool_conf.xml"
 
 
+galaxy_local_tools_dir: "{{ galaxy_server_dir }}/tools/local"
+
 galaxy_config_files:
   - src: "files/galaxy/config/file_sources_conf.yml"
     dest: "{{ galaxy_config_dir }}/file_sources_conf.yml"
 
-
-galaxy_local_tools_dir: "{{ galaxy_server_dir }}/tools/local"
-
+file_sources_config_file: "{{ galaxy_config_dir }}/file_sources_conf.yml"
 
 galaxy_tool_config_files:
   - "{{ galaxy_config_dir }}/tool_conf.xml"
   - "{{ galaxy_config_dir }}/tool_conf_interactive.xml"
   - "{{ galaxy_config_dir }}/local_tool_conf.xml"
-
-
-file_sources_config_file: "{{ galaxy_config_dir }}/file_sources_conf.yml"
 
 
 galaxy_dynamic_job_rules:
