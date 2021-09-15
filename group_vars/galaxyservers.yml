@@ -37,7 +37,7 @@ galaxy_config:
   # Application config
   galaxy:
     brand: "🚀 Dev"
-    admin_users: admin@example.com
+    admin_users: c.hyde@qcif.edu.au
     database_connection: "postgresql:///galaxy?host=/var/run/postgresql"
     file_path: /data
     check_migrate_tools: false
@@ -47,13 +47,13 @@ galaxy_config:
     job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
     job_resource_params_file: "{{ galaxy_config_dir }}/job_resource_params_conf.xml"
     tool_destinations_config_file: "{{ galaxy_config_dir }}/tool_destinations.yml"
+    file_sources_config_file: "{{ galaxy_config_dir }}/file_sources_conf.yml"
     interactivetools_enable: true
     interactivetools_map: "{{ gie_proxy_sessions_path }}"
+    ftp_upload_site: "{{ inventory_hostname }}"
 
   # FTP
-  file_sources_configured: true
   ftp_upload_dir: /data/uploads
-  ftp_upload_site: "{{ inventory_hostname }}"
 
   # uWSGI config (mule messaging)
   uwsgi:
@@ -98,13 +98,11 @@ galaxy_config_templates:
     dest: "{{ galaxy_config_dir }}/local_tool_conf.xml"
 
 
-galaxy_local_tools_dir: "{{ galaxy_server_dir }}/tools/local"
-
 galaxy_config_files:
   - src: "files/galaxy/config/file_sources_conf.yml"
     dest: "{{ galaxy_config_dir }}/file_sources_conf.yml"
 
-file_sources_config_file: "{{ galaxy_config_dir }}/file_sources_conf.yml"
+galaxy_local_tools_dir: "{{ galaxy_server_dir }}/tools/local"
 
 galaxy_tool_config_files:
   - "{{ galaxy_config_dir }}/tool_conf.xml"
