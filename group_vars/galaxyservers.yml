@@ -33,7 +33,7 @@ galaxy_config:
   # Application config
   galaxy:
     brand: "🚀 Dev"
-    admin_users: admin@example.com
+    admin_users: testing@example.com
     database_connection: "postgresql:///galaxy?host=/var/run/postgresql"
     file_path: /data
     check_migrate_tools: false
