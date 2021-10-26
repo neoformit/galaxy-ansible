@@ -7,16 +7,16 @@ wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/embedd
     > ${ html.files_path }/index.html &&
 
 wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/main/data/ranked_0.pdb
-    > '${ html.files_path }/ranked_0.pdb' &
+    > '${ html.files_path }/ranked_0.pdb' &&
 
 wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/main/data/ranked_1.pdb
-    > '${ html.files_path }/ranked_1.pdb' &
+    > '${ html.files_path }/ranked_1.pdb' &&
 
 wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/main/data/ranked_2.pdb
-    > '${ html.files_path }/ranked_2.pdb' &
+    > '${ html.files_path }/ranked_2.pdb' &&
 
 wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/main/data/ranked_3.pdb
-    > '${ html.files_path }/ranked_3.pdb' &
+    > '${ html.files_path }/ranked_3.pdb' &&
 
 wget -q -O - https://raw.githubusercontent.com/neoformit/alphafold-galaxy/main/data/ranked_4.pdb
     > '${ html.files_path }/ranked_4.pdb' &&
