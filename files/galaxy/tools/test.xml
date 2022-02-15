@@ -1,0 +1,32 @@
+<tool id="testing" name="testing" version="1.0.0">
+  <requirements>
+  </requirements>
+
+  <command><![CDATA[
+
+    echo "$input"
+
+  ]]>
+  </command>
+
+  <inputs>
+    <param
+      name="input"
+      type="text"
+      area="true"
+      label="Text area"
+      help="Test text area"
+    />
+  </inputs>
+
+  <outputs>
+  </outputs>
+
+  <tests>
+  </tests>
+
+  <help><![CDATA[
+
+]]></help>
+
+</tool>

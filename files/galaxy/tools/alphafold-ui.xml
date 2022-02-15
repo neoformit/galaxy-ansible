@@ -1,4 +1,4 @@
-<tool id="testing" name="Alphafold UI">
+<tool id="alphafold_ui" name="Alphafold UI">
     <command><![CDATA[
 
 mkdir -p '${ html.files_path }' &&
