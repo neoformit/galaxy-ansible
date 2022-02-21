@@ -1,2 +1,2 @@
 [galaxyservers]
-cam-gx-dev.gvl.org.au ansible_connection=local ansible_user=ubuntu
+cam-gx-dev.gvl.org.au ansible_connection=ssh ansible_user=ubuntu
