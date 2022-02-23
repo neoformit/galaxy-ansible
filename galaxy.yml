@@ -26,4 +26,4 @@
       become_user: "{{ galaxy_user.name }}"
     - galaxyproject.nginx
     - geerlingguy.docker
-    - usegalaxy_eu.gie_proxy
+    # - usegalaxy_eu.gie_proxy  # Won't work without cloudflare API token
