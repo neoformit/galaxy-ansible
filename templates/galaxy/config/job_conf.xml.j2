@@ -1,5 +1,4 @@
 <job_conf>
-
     <plugins workers="4">
         <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner"/>
     </plugins>
@@ -26,18 +25,13 @@
         </destination>
     </destinations>
 
-<!--
     <resources>
         <group id="testing">cores,time</group>
     </resources>
- -->
 
     <tools>
-        <!-- <tool id="testing" destination="dynamic_cores_time" resources="testing"/> -->
-
         <tool destination="interactive_local" id="interactive_tool_ethercalc" />
         <tool destination="interactive_local" id="interactive_tool_rstudio" />
         <tool destination="interactive_local" id="interactive_tool_isee" />
     </tools>
-
 </job_conf>
