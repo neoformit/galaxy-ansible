@@ -38,4 +38,20 @@ server {
     location /favicon.ico {
         alias {{ galaxy_server_dir }}/static/favicon.ico;
     }
+
+    location /tiaas {
+        uwsgi_pass {{ tiaas_listen_url }};
+        uwsgi_param UWSGI_SCHEME $scheme;
+        include uwsgi_params;
+    }
+
+    location /tiaas/static {
+        alias /srv/sites/tiaas/static;
+    }
+
+    location /join-training {
+        uwsgi_pass {{ tiaas_listen_url }};
+        uwsgi_param UWSGI_SCHEME $scheme;
+        include uwsgi_params;
+    }
 }

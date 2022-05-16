@@ -1,0 +1,53 @@
+# TIaaS Configuration
+tiaas_galaxy_db_url: postgres
+tiaas_galaxy_idsecret: '{{ galaxy_config.galaxy.id_secret | default("USING THE DEFAULT IS NOT SECURE!") }}'
+
+# TIaaS GDPR
+retain_extra_time: 12
+
+# TIaaS Deployment
+tiaas_dir: /opt/tiaas
+tiaas_code_dir: "{{ tiaas_dir }}/code"
+tiaas_config_dir: "{{ tiaas_dir }}/config"
+tiaas_static_dir: "{{ tiaas_dir }}/static"
+tiaas_venv_dir: "{{ tiaas_dir }}/venv"
+tiaas_user: tiaas
+tiaas_group: tiaas
+tiaas_repo: "https://github.com/usegalaxy-eu/tiaas2"
+tiaas_version: master
+tiaas_galaxy_stylesheet: "{{ galaxy_server_dir }}/static/style/base.css"
+
+# Create a cron job to disassociate training roles from groups after trainings have expired, set to `false` to disable
+tiaas_disassociate_training_roles:
+  hour: 0      # optional, defaults to 0
+  minute: 0    # optional, defaults to 0
+
+# Galaxy DB access
+tiaas_galaxy_db_name: "galaxy"
+tiaas_galaxy_db_user: ""
+tiaas_galaxy_db_pass: ""
+tiaas_galaxy_db_host: "/var/run/postgresql/"
+tiaas_galaxy_db_port: ""
+
+# TIaaS DB access (default is SQLite in {{ tiaas_dir }}/db.sqlite3)
+tiaas_tiaas_use_sqlite: true  # disable and set options below as needed for PostgreSQL
+tiaas_tiaas_db_name: "tiaas"
+tiaas_tiaas_db_user: ""
+tiaas_tiaas_db_pass: ""
+tiaas_tiaas_db_host: "/var/run/postgresql/"
+tiaas_tiaas_db_port: ""
+
+tiaas_other_config: ""
+tiaas_info:
+  owner: default
+  owner_email: admin@localhost
+  owner_site: "{{ inventory_hostname }}"
+  domain: "{{ inventory_hostname }}"
+
+tiaas_create_group: true
+tiaas_create_user: true
+tiaas_force_checkout: true
+tiaas_secret_key: "Using the default is bad news bears"
+
+tiaas_admin_user: admin
+tiaas_admin_pass: admin

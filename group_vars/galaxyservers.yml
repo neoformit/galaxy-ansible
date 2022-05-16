@@ -4,9 +4,42 @@ pip_virtualenv_command: /usr/bin/python3 -m virtualenv # usegalaxy_eu.certbot, u
 certbot_virtualenv_package_name: python3-virtualenv    # usegalaxy_eu.certbot
 pip_package: python3-pip                               # geerlingguy.pip
 
-# PostgreSQL
+postgresql_conf:
+  - max_connections: 50       # Decrease connection limit
+  - listen_addresses: "'*'"   # Allow remote connections
+
+postgresql_pg_hba_conf:
+  - host all all 0.0.0.0/0 md5 # The allowed connection to the database for the dev galaxy server.
+
 postgresql_objects_users:
   - name: galaxy
+    password: "{{ vault_db_password }}"
+    db: galaxy
+    priv: "ALL"
+  - name: tiaas
+    password: "{{ vault_db_tiaas_password }}"
+    db: galaxy
+postgresql_objects_privileges:
+  - database: galaxy
+    roles: tiaas
+    objs: galaxy_user,galaxy_session,job,history,workflow,workflow_invocation
+    type: table
+    privs: SELECT
+  - database: galaxy
+    roles: tiaas
+    objs: user_group_association,galaxy_group,role,group_role_association
+    type: table
+    privs: SELECT,INSERT
+  - database: galaxy
+    roles: tiaas
+    objs: role_id_seq,galaxy_group_id_seq,group_role_association_id_seq,user_group_association_id_seq
+    type: sequence
+    privs: USAGE,SELECT
+  - database: galaxy
+    roles: tiaas
+    objs: group_role_association
+    type: table
+    privs: DELETE
 postgresql_objects_databases:
   - name: galaxy
     owner: galaxy
@@ -25,6 +58,7 @@ galaxy_user: {name: galaxy, shell: /bin/bash}
 galaxy_repo: "{{ galaxy_git_repo | default('https://github.com/neoformit/galaxy.git') }}"
 galaxy_commit_id: dev-isee
 galaxy_force_checkout: true
+galaxy_db_user_password: "{{ vault_db_user_password }}"
 miniconda_prefix: "{{ galaxy_tool_dependency_dir }}/_conda"
 miniconda_version: 4.7.12
 miniconda_manage_dependencies: false
@@ -146,6 +180,37 @@ slurm_config:
   SlurmdParameters: config_overrides   # Ignore errors if the host actually has cores != 2
   SelectType: select/cons_res
   SelectTypeParameters: CR_CPU_Memory  # Allocate individual cores/memory instead of entire node
+
+# TIaaS Config
+tiaas_dir: /srv/sites/tiaas
+tiaas_user: tiaas
+tiaas_group: tiaas
+tiaas_version: main
+tiaas_admin_user: admin
+tiaas_admin_pass: "{{ vault_tiaas_admin_password }}"
+tiaas_listen_url: "127.0.0.1:6000"
+# Dev repo
+tiaas_repo: "https://github.com/neoformit/tiaas2"
+
+tiaas_galaxy_db_host: "cam-gx-dev.gvl.org.au"
+tiaas_galaxy_db_port: "5432"
+tiaas_galaxy_db_user: "tiaas"
+tiaas_galaxy_db_pass: "{{ vault_db_tiaas_password }}"
+tiaas_info:
+  owner: "Galaxy Dev"
+  owner_email: help@genome.edu.au
+  owner_site: "https://site.usegalaxy.org.au"
+  domain: "cam-gx-dev.gvl.org.au"
+tiaas_other_config: |
+    EMAIL_HOST = "smtp.mailtrap.io"
+    EMAIL_PORT = 2525
+    EMAIL_HOST_USERNAME = '7ac4110c7f742c'
+    EMAIL_HOST_PASSWORD = '256cd0d8c23ce3'
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = "/tmp/tiaas-email"
+    EMAIL_TIMEOUT = 60
+    TIAAS_SEND_EMAIL_TO = "help@genome.edu.au"
+    TIAAS_SEND_EMAIL_FROM = "tiaas-no-reply@usegalaxy.org.au"
 
 # Interactive tools
 docker_install_compose: false
