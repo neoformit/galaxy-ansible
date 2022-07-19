@@ -1,11 +1,7 @@
 ---
+# This is redundant in favour of job_conf.yml
 tools:
   testing:
-    rules:
-      - rule_type: file_size
-        lower_bound: 16  # bytes
-        upper_bound: Infinity
-        destination: slurm-2c
-    default_destination: slurm
-default_destination: slurm
+    default_destination: pulsar
+default_destination: local
 verbose: True

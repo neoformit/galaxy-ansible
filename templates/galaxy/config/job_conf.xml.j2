@@ -1,6 +1,12 @@
+<!-- NB This file has been replaced by job_conf.yml -->
+
 <job_conf>
     <plugins workers="4">
         <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner"/>
+        <plugin id="slurm" type="runner" load="galaxy.jobs.runners.slurm:SlurmJobRunner"/>
+        <plugin id="pulsar" type="runner" load="galaxy.jobs.runners.pulsar:PulsarMQJobRunner">
+
+        </plugin>
     </plugins>
 
     <destinations default="local">
@@ -11,6 +17,10 @@
             <env id="LC_ALL">C</env>
             <env id="SINGULARITY_CACHEDIR">/tmp/singularity</env>
             <env id="SINGULARITY_TMPDIR">/tmp</env>
+        </destination>
+
+        <destination id="pulsar" runner="pulsar">
+
         </destination>
 
         <destination id="interactive_local" runner="local">

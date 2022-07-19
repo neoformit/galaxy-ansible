@@ -1,2 +1,5 @@
 [galaxyservers]
 cam-gx-dev.gvl.org.au ansible_connection=ssh ansible_user=ubuntu
+
+[pulsarservers]
+203.101.228.39        ansible_connection=ssh ansible_user=ubuntu

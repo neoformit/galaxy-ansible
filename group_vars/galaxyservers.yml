@@ -19,27 +19,27 @@ postgresql_objects_users:
   - name: tiaas
     password: "{{ vault_db_tiaas_password }}"
     db: galaxy
-postgresql_objects_privileges:
-  - database: galaxy
-    roles: tiaas
-    objs: galaxy_user,galaxy_session,job,history,workflow,workflow_invocation
-    type: table
-    privs: SELECT
-  - database: galaxy
-    roles: tiaas
-    objs: user_group_association,galaxy_group,role,group_role_association
-    type: table
-    privs: SELECT,INSERT
-  - database: galaxy
-    roles: tiaas
-    objs: role_id_seq,galaxy_group_id_seq,group_role_association_id_seq,user_group_association_id_seq
-    type: sequence
-    privs: USAGE,SELECT
-  - database: galaxy
-    roles: tiaas
-    objs: group_role_association
-    type: table
-    privs: DELETE
+# postgresql_objects_privileges:
+#   - database: galaxy
+#     roles: tiaas
+#     objs: galaxy_user,galaxy_session,job,history,workflow,workflow_invocation
+#     type: table
+#     privs: SELECT
+#   - database: galaxy
+#     roles: tiaas
+#     objs: user_group_association,galaxy_group,role,group_role_association
+#     type: table
+#     privs: SELECT,INSERT
+#   - database: galaxy
+#     roles: tiaas
+#     objs: role_id_seq,galaxy_group_id_seq,group_role_association_id_seq,user_group_association_id_seq
+#     type: sequence
+#     privs: USAGE,SELECT
+#   - database: galaxy
+#     roles: tiaas
+#     objs: group_role_association
+#     type: table
+#     privs: DELETE
 postgresql_objects_databases:
   - name: galaxy
     owner: galaxy
@@ -56,9 +56,14 @@ galaxy_layout: root-dir
 galaxy_root: /srv/galaxy
 galaxy_user: {name: galaxy, shell: /bin/bash}
 galaxy_repo: "{{ galaxy_git_repo | default('https://github.com/neoformit/galaxy.git') }}"
-galaxy_commit_id: dev-isee
+galaxy_commit_id: release_21.01
 galaxy_force_checkout: true
 galaxy_db_user_password: "{{ vault_db_user_password }}"
+galaxy_mutable_config_dir: "{{ galaxy_root }}/var"
+galaxy_mutable_data_dir: "{{ galaxy_root }}"
+galaxy_config_dir: "{{ galaxy_root }}/config"
+galaxy_server_dir: "{{ galaxy_root }}/server"
+galaxy_venv_dir: "{{ galaxy_root }}/venv"
 miniconda_prefix: "{{ galaxy_tool_dependency_dir }}/_conda"
 miniconda_version: 4.7.12
 miniconda_manage_dependencies: false
@@ -74,12 +79,13 @@ galaxy_config:
     tool_data_path: "{{ galaxy_mutable_data_dir }}/tool-data"
     object_store_store_by: uuid
     id_secret: "{{ vault_id_secret }}"
-    job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
+    job_config_file: "{{ galaxy_config_dir }}/job_conf.yml"
     job_resource_params_file: "{{ galaxy_config_dir }}/job_resource_params_conf.xml"
     tool_destinations_config_file: "{{ galaxy_config_dir }}/tool_destinations.yml"
     interactivetools_enable: true
     interactivetools_map: "{{ gie_proxy_sessions_path }}"
     conda_auto_install: true
+    tool_data_table_config_path: /cvmfs/data.galaxyproject.org/byhand/location/tool_data_table_conf.xml,/cvmfs/data.galaxyproject.org/managed/location/tool_data_table_conf.xml
 
   # uWSGI config (mule messaging)
   uwsgi:
@@ -109,7 +115,7 @@ galaxy_config:
     farm: job-handlers:1,2
 
 galaxy_config_templates:
-  - src: templates/galaxy/config/job_conf.xml.j2
+  - src: templates/galaxy/config/job_conf.yml.j2
     dest: "{{ galaxy_config.galaxy.job_config_file }}"
   - src: templates/galaxy/config/tool_destinations.yml
     dest: "{{ galaxy_config.galaxy.tool_destinations_config_file }}"
@@ -135,7 +141,7 @@ galaxy_dynamic_job_rules:
 galaxy_manage_systemd: yes
 galaxy_systemd_env: [DRMAA_LIBRARY_PATH="/usr/lib/slurm-drmaa/lib/libdrmaa.so.1"]
 
-# # Certbot
+# Certbot
 certbot_auto_renew_hour: "{{ 23 |random(seed=inventory_hostname)  }}"
 certbot_auto_renew_minute: "{{ 59 |random(seed=inventory_hostname)  }}"
 certbot_auth_method: --webroot
@@ -147,8 +153,10 @@ certbot_well_known_root: /srv/nginx/_well-known_root
 certbot_agree_tos: --agree-tos
 certbot_share_key_users:
   - nginx
+  - rabbitmq
 certbot_post_renewal: |
     systemctl restart nginx || true
+    systemctl restart rabbitmq-server || true
 certbot_domains:
   - "{{ inventory_hostname }}"
   # - "*.interactivetoolentrypoint.interactivetool.{{ inventory_hostname }}"
@@ -163,13 +171,14 @@ nginx_servers:
   - redirect-ssl
 nginx_ssl_servers:
   - galaxy
-  - galaxy-gie-proxy
+  # - galaxy-gie-proxy
 nginx_enable_default_server: false
 nginx_conf_http:
   client_max_body_size: 1g
 nginx_ssl_role: usegalaxy_eu.certbot
 nginx_conf_ssl_certificate: /etc/ssl/certs/fullchain.pem
 nginx_conf_ssl_certificate_key: /etc/ssl/user/privkey-nginx.pem
+nginx_remove_default_vhost: true
 
 # Slurm
 slurm_roles: ['controller', 'exec'] # Which roles should the machine play? exec are execution hosts.
@@ -226,3 +235,36 @@ gie_proxy_setup_service: systemd
 gie_proxy_port: 8000
 gie_proxy_verbose: true
 gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
+
+# RabbitMQ
+rabbitmq_version: 3.10.6-1
+rabbitmq_plugins: rabbitmq_management
+
+rabbitmq_config:
+  listeners:
+    tcp: none
+  ssl_listeners:
+    default: 5671
+  ssl_options:
+    cacertfile: /etc/ssl/certs/fullchain.pem
+    certfile: /etc/ssl/certs/cert.pem
+    keyfile: /etc/ssl/user/privkey-rabbitmq.pem
+    verify: verify_peer
+    fail_if_no_peer_cert: 'false'
+
+rabbitmq_container:
+  name: rabbit_hole
+  image: rabbitmq:3.9.11
+  hostname: "{{ inventory_hostname }}"
+
+rabbitmq_vhosts:
+  - /pulsar/galaxy
+
+rabbitmq_users:
+  - user: admin
+    password: "{{ vault_rabbitmq_admin_password }}"
+    tags: administrator
+    vhost: /
+  - user: galaxy
+    password: "{{ vault_rabbitmq_password_vhost }}"
+    vhost: /pulsar/galaxy

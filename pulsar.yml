@@ -1,0 +1,36 @@
+- hosts: pulsarservers
+  become: true
+  become_user: root
+  vars_files:
+    - group_vars/secret.yml
+  pre_tasks:
+    - name: Install some packages
+      package:
+        name:
+          - tar
+          - git
+          - acl
+          - make
+          - bzip2
+          - build-essential
+          - python3-dev
+          - libcurl4-openssl-dev
+          - libssl-dev
+          - virtualenv
+          - python3-psycopg2
+        state: present
+        update_cache: yes
+      become: yes
+  post_tasks:
+    - name: Install slurm-drmaa
+      package:
+        name: slurm-drmaa1
+        state: present
+      become: yes
+  roles:
+    - galaxyproject.repos
+    - role: galaxyproject.cvmfs
+      become: yes
+    - galaxyproject.pulsar
+    - role: galaxyproject.slurm
+      become: yes
