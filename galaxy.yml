@@ -7,10 +7,10 @@
   pre_tasks:
     - name: Install Dependencies
       package:
-        name: ['acl', 'bzip2', 'git', 'make', 'python3-psycopg2', 'tar', 'virtualenv']
+        name: ['acl', 'bzip2', 'git', 'make', 'python3-pip', 'python3-psycopg2', 'tar', 'virtualenv']
     - name: Install docker pip package
       ansible.builtin.pip:
-        name: docker
+        name: ['docker', 'drmaa']
     - name: Set docker user
       block:
         - name: Set _docker_users CentOS
@@ -33,8 +33,6 @@
       package:
         name: slurm-drmaa1
 
-
-
   roles:
     - galaxyproject.repos
     - galaxyproject.slurm
@@ -49,6 +47,6 @@
       become_user: "{{ galaxy_user.name }}"
     - geerlingguy.docker
     - galaxyproject.nginx
-    - usegalaxy_eu.rabbitmqserver
-    # - usegalaxy_eu.tiaas2
+    - usegalaxy_eu.rabbitmq
+    - usegalaxy_eu.tiaas2
     # - usegalaxy_eu.gie_proxy  # Won't work without cloudflare API token
