@@ -1,7 +1,4 @@
 ---
 # This is redundant in favour of job_conf.yml
-tools:
-  testing:
-    default_destination: pulsar
 default_destination: local
 verbose: True

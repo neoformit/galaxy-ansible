@@ -4,6 +4,14 @@
 # Deploy a Galaxy server
 #   https://docs.galaxyproject.org/
 
+- name: DEBUG var galaxy_tool_config_files
+  ansible.builtin.debug:
+    var: galaxy_tool_config_files
+
+- name: DEBUG join galaxy_tool_config_files
+  ansible.builtin.debug:
+    msg: "{{ galaxy_tool_config_files | join(',') }}"
+
 - name: Ensure that mutually exclusive options are not set
   assert:
     that:

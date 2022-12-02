@@ -16,30 +16,30 @@ postgresql_objects_users:
     password: "{{ vault_db_password }}"
     db: galaxy
     priv: "ALL"
-  - name: tiaas
-    password: "{{ vault_db_tiaas_password }}"
-    db: galaxy
-postgresql_objects_privileges:
-  - database: galaxy
-    roles: tiaas
-    objs: galaxy_user,galaxy_session,job,history,workflow,workflow_invocation
-    type: table
-    privs: SELECT
-  - database: galaxy
-    roles: tiaas
-    objs: user_group_association,galaxy_group,role,group_role_association
-    type: table
-    privs: SELECT,INSERT
-  - database: galaxy
-    roles: tiaas
-    objs: role_id_seq,galaxy_group_id_seq,group_role_association_id_seq,user_group_association_id_seq
-    type: sequence
-    privs: USAGE,SELECT
-  - database: galaxy
-    roles: tiaas
-    objs: group_role_association
-    type: table
-    privs: DELETE
+  # - name: tiaas
+  #   password: "{{ vault_db_tiaas_password }}"
+  #   db: galaxy
+# postgresql_objects_privileges:
+  # - database: galaxy
+  #   roles: tiaas
+  #   objs: galaxy_user,galaxy_session,job,history,workflow,workflow_invocation
+  #   type: table
+  #   privs: SELECT
+  # - database: galaxy
+  #   roles: tiaas
+  #   objs: user_group_association,galaxy_group,role,group_role_association
+  #   type: table
+  #   privs: SELECT,INSERT
+  # - database: galaxy
+  #   roles: tiaas
+  #   objs: role_id_seq,galaxy_group_id_seq,group_role_association_id_seq,user_group_association_id_seq
+  #   type: sequence
+  #   privs: USAGE,SELECT
+  # - database: galaxy
+  #   roles: tiaas
+  #   objs: group_role_association
+  #   type: table
+  #   privs: DELETE
 postgresql_objects_databases:
   - name: galaxy
     owner: galaxy
@@ -117,8 +117,6 @@ galaxy_config:
 galaxy_config_templates:
   - src: templates/galaxy/config/job_conf.yml.j2
     dest: "{{ galaxy_config.galaxy.job_config_file }}"
-  - src: templates/galaxy/config/tool_destinations.yml
-    dest: "{{ galaxy_config.galaxy.tool_destinations_config_file }}"
   - src: templates/galaxy/config/job_resource_params_conf.xml.j2
     dest: "{{ galaxy_config.galaxy.job_resource_params_file }}"
   - src: templates/galaxy/config/tool_conf_interactive.xml.j2
@@ -159,11 +157,11 @@ certbot_post_renewal: |
     systemctl restart rabbitmq-server || true
 certbot_domains:
   - "{{ inventory_hostname }}"
-  # - "*.interactivetoolentrypoint.interactivetool.{{ inventory_hostname }}"
-# certbot_dns_provider: cloudflare
-# certbot_dns_credentials:
-#   api_token: "{{ vault_dns_cloudflare_api_token }}"
-# dns-cloudflare-propagation-seconds: 60
+  - "*.interactive.tool.{{ inventory_hostname }}"
+certbot_dns_provider: cloudflare
+certbot_dns_credentials:
+  api_token: "{{ vault_dns_cloudflare_api_token }}"
+dns-cloudflare-propagation-seconds: 60
 
 # NGINX
 nginx_selinux_allow_local_connections: true
@@ -232,7 +230,7 @@ docker_install_compose: false
 docker_users:
   - "{{ galaxy_user.name }}"
 gie_proxy_dir: /srv/gie-proxy/proxy
-gie_proxy_git_version: master
+gie_proxy_git_version: main
 gie_proxy_setup_nodejs: nodeenv
 gie_proxy_nodejs_version: "10.13.0"
 gie_proxy_virtualenv: /srv/gie-proxy/venv
@@ -241,31 +239,3 @@ gie_proxy_setup_service: systemd
 gie_proxy_port: 8000
 gie_proxy_verbose: true
 gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
-
-# RabbitMQ
-rabbitmq_version: 3.10.6-1
-rabbitmq_plugins: rabbitmq_management
-
-rabbitmq_config:
-- rabbit:
-  - tcp_listeners:
-    - "'127.0.0.1'": 5672
-  - ssl_listeners:
-    - "'0.0.0.0'": 5671
-  - ssl_options:
-     - cacertfile: /etc/ssl/certs/fullchain.pem
-     - certfile: /etc/ssl/certs/cert.pem
-     - keyfile: /etc/ssl/user/privkey-rabbitmq.pem
-     - fail_if_no_peer_cert: 'false'
-
-rabbitmq_vhosts:
-  - /pulsar/galaxy
-
-rabbitmq_users:
-  - user: admin
-    password: "{{ vault_rabbitmq_admin_password }}"
-    tags: administrator
-    vhost: /
-  - user: galaxy
-    password: "{{ vault_rabbitmq_password_vhost }}"
-    vhost: /pulsar/galaxy

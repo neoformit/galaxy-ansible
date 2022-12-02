@@ -3,7 +3,7 @@
   become: true
   become_user: root
   vars_files:
-    - group_vars/secret.yml
+    - group_vars/secrets.yml
   pre_tasks:
     - name: Install Dependencies
       package:
@@ -32,6 +32,12 @@
     - name: Install slurm-drmaa
       package:
         name: slurm-drmaa1
+    - name: Copy LFQ-Analyst interactive tool into Galaxy code
+      copy:
+        src: 'galaxy/tools/lfq-analyst.xml'
+        dest: '{{ galaxy_server_dir }}/tools/interactive/interactivetool_lfqanalyst.xml'
+        owner: galaxy
+        group: galaxy
 
   roles:
     - galaxyproject.repos
@@ -47,6 +53,5 @@
       become_user: "{{ galaxy_user.name }}"
     - geerlingguy.docker
     - galaxyproject.nginx
-    - usegalaxy_eu.rabbitmq
-    - usegalaxy_eu.tiaas2
-    # - usegalaxy_eu.gie_proxy  # Won't work without cloudflare API token
+    # - galaxyproject.tiaas2
+    - usegalaxy_eu.gie_proxy  # Requires cloudflare API token
