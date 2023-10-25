@@ -1,0 +1,21 @@
+<tool id="interactivetool_ena_upload_templates" name="ENA upload template builder" version="0.1.0+galaxy0" profile="22.5">
+    <requirements>
+        <container src="neoformit/ena-upload:v1.0">
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+
+while [[ ! -f /app/app/data.csv ]]; do
+    sleep 1
+done
+
+cp /app/app/data.csv '${output1}'
+
+    ]]></command>
+    <outputs>
+        <data name="output1" format="csv" />
+    </outputs>
+    <help><![CDATA[
+    TODO: Fill in help.
+    ]]>
+    </help>
+</tool>

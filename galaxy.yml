@@ -12,6 +12,16 @@
     - name: Install slurm-drmaa
       package:
         name: slurm-drmaa1
+    - name: Copy .bash-aliases
+      copy:
+        src: config/.bash_aliases
+        dest: /home/ubuntu/.bash_aliases
+        owner: ubuntu
+        group: ubuntu
+    - name: Copy local tools
+      copy:
+        src: galaxy/tools/interactivetool_ena_upload.xml
+        dest: "{{ galaxy_server_dir }}/tools/interactive/interactivetool_ena_upload.xml"
   roles:
     - galaxyproject.repos
     - galaxyproject.slurm

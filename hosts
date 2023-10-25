@@ -1,2 +1,2 @@
 [galaxyservers]
-cam-gx-dev.gvl.org.au ansible_connection=ssh ansible_user=ubuntu
+gxdev.neoformit.com ansible_connection=ssh ansible_user=ubuntu
