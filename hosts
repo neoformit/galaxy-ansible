@@ -1,2 +1,4 @@
 [galaxyservers]
-gxdev.neoformit.com ansible_connection=ssh ansible_user=ubuntu
+cameron.qfab.org ansible_connection=ssh ansible_user=ubuntu
+[dbservers:children]
+galaxyservers

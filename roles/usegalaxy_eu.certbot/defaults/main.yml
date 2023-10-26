@@ -13,7 +13,7 @@ certbot_package: certbot
 certbot_script: "{{ certbot_package }}"
 certbot_repo: https://github.com/certbot/certbot.git
 certbot_version: master
-certbot_keep_updated: yes
+certbot_keep_updated: true
 # Automatically sets certbot_force_run
 certbot_expand: false
 
@@ -21,14 +21,23 @@ certbot_expand: false
 certbot_dir: /opt/certbot
 
 certbot_letsencrypt_dir: /etc/letsencrypt
-# the test in tasks/request-cert.yml ensure that this is not used if certbot_dns_provider is not defined
-# but a default is necessary to ensure that an error is not triggered when certbot_dns_provider is not defined 
+# the test in tasks/request-cert.yml ensure that this is not used if
+# certbot_dns_provider is not defined but a default is necessary to ensure that
+# an error is not triggered when certbot_dns_provider is not defined
 certbot_dns_credentials_file: "{{ certbot_letsencrypt_dir }}/dns-{{ certbot_dns_provider | default('ERROR') }}-credentials.ini"
 
 certbot_environment: production
 
+# of the format 'nginx', 'root'
 certbot_share_key_users: []
+# of the format '999:999'
+certbot_share_key_ids: []
 certbot_share_key_dir: /etc/ssl/user
 
 # Set to true to run `certbot certonly` even if its config already exists
 certbot_force_run: "{{ certbot_expand }}"
+
+# Agree to the TOS
+certbot_agree_tos: ""
+# Must be set as following to agree automatically, otherwise it will fail.
+# certbot_agree_tos: "--agree-tos"

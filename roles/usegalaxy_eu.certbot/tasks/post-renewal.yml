@@ -1,13 +1,13 @@
 ---
 - name: Create the ssl-cert group if it doesn't exist
-  group:
+  ansible.builtin.group:
     name: "{{ certbot_ssl_group }}"
     state: present
-    system: yes
+    system: true
   when: certbot_ssl_group is defined
 
 - name: Write the certificate post-renewal hook script
-  copy:
+  ansible.builtin.copy:
     content: |
         #!/bin/bash
         mkdir -p  /etc/ssl/private/
@@ -36,6 +36,10 @@
         {% for user in certbot_share_key_users %}
         cp /etc/ssl/private/privkey.pem {{ certbot_share_key_dir }}/privkey-{{ user }}.pem
         chown {{ user }}: {{ certbot_share_key_dir }}/privkey-{{ user }}.pem
+        {% endfor %}
+        {% for spec in certbot_share_key_ids %}
+        cp /etc/ssl/private/privkey.pem {{ certbot_share_key_dir }}/privkey-{{ spec }}.pem
+        chown {{ spec }} {{ certbot_share_key_dir }}/privkey-{{ spec }}.pem
         {% endfor %}
         # Other
         {{ certbot_post_renewal }}
